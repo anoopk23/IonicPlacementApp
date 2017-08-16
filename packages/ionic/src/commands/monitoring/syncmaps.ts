@@ -20,12 +20,9 @@ import { isSuperAgentError } from '@ionic/cli-utils/guards';
 export class MonitoringSyncSourcemapsCommand extends Command {
   async run(inputs: CommandLineInputs, options: CommandLineOptions): Promise<void>  {
     console.log('Syncing sourcemaps', inputs, options);
-    //const { App } = await import('@ionic/cli-utils/lib/app');
 
     const token = await this.env.session.getUserToken();
     const appId = await this.env.project.loadAppId();
-    //const appLoader = new App(token, this.env.client);
-    //const app = await appLoader.load(appId)
 
     const { ConfigXml } = await import('@ionic/cli-utils/lib/cordova/config');
     const conf = await ConfigXml.load(this.env.project.directory);
@@ -33,16 +30,6 @@ export class MonitoringSyncSourcemapsCommand extends Command {
 
     const appVersion = cordovaInfo.version;
     const commitHash = await this.env.shell.run('git', ['rev-parse', 'HEAD'], { cwd: this.env.project.directory });
-
-    /*
-    const realAppVersion = await this.env.prompt({
-      type: 'input',
-      name: 'realAppVersion',
-      default: appVersion,
-      message: 'Which version of your app does this sourcemap map to (must follow semver!)?'
-    });
-    */
-
 
     const sourcemapsDir = path.join(this.env.project.directory, '.sourcemaps');
 
