@@ -93,7 +93,6 @@ export class MonitoringSyncSourcemapsCommand extends Command {
 
     const fileData = await fsReadFile(file, { encoding: 'utf8' });
     const sourcemapPost = r.data.sourcemap_post;
-    //return Promise.resolve()
 
     createRequest('post', sourcemapPost.url)
       .buffer()
@@ -108,7 +107,6 @@ export class MonitoringSyncSourcemapsCommand extends Command {
           return Promise.reject(err);
         }
         if (res.status !== 204) {
-          // TODO: log body for debug purposes?
           return Promise.reject(new Error(`Unexpected status code from AWS: ${res.status}`));
         }
 
@@ -117,7 +115,6 @@ export class MonitoringSyncSourcemapsCommand extends Command {
 
         Promise.resolve();
       });
-    //return uploadToS3(newSourcemap.sourcemapPost, this.state.sourcemap_file)
   }
 
   async doProdBuild() {
