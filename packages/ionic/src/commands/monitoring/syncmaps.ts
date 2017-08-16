@@ -2,10 +2,13 @@ import * as path from 'path';
 
 import * as chalk from 'chalk';
 
+import { APIResponseSuccess } from '@ionic/cli-utils/definitions';
+
 import { BACKEND_PRO, CommandLineInputs, CommandLineOptions } from '@ionic/cli-utils';
 import { Command, CommandMetadata } from '@ionic/cli-utils/lib/command';
 import { createFatalAPIFormat } from '@ionic/cli-utils/lib/http';
-import { readDir, pathExists } from '@ionic/cli-utils/lib/utils/fs';
+import { createRequest } from '@ionic/cli-utils/lib/utils/http';
+import { fsReadFile, readDir, pathExists } from '@ionic/cli-utils/lib/utils/fs';
 import { isSuperAgentError } from '@ionic/cli-utils/guards';
 
 @CommandMetadata({
@@ -31,12 +34,14 @@ export class MonitoringSyncSourcemapsCommand extends Command {
     const appVersion = cordovaInfo.version;
     const commitHash = await this.env.shell.run('git', ['rev-parse', 'HEAD'], { cwd: this.env.project.directory });
 
+    /*
     const realAppVersion = await this.env.prompt({
       type: 'input',
       name: 'realAppVersion',
       default: appVersion,
       message: 'Which version of your app does this sourcemap map to (must follow semver!)?'
     });
+    */
 
 
     const sourcemapsDir = path.join(this.env.project.directory, '.sourcemaps');
@@ -60,7 +65,7 @@ export class MonitoringSyncSourcemapsCommand extends Command {
       doNewBuild && await this.doProdBuild();
     }
 
-    this.env.log.info(`Syncing SourceMaps for app version ${chalk.green(realAppVersion)} of ${chalk.green(cordovaInfo.id)}`)
+    this.env.log.info(`Syncing SourceMaps for app version ${chalk.green(appVersion)} of ${chalk.green(cordovaInfo.id)}`)
     readDir(sourcemapsDir).then(files => {
       const maps = files.filter(f => f.indexOf('.js.map') >= 0)
       Promise.all(maps.map(f => this.syncSourcemap(f, appVersion, commitHash, appId, token)))
@@ -84,7 +89,8 @@ export class MonitoringSyncSourcemapsCommand extends Command {
       if (res.meta.status !== 201) {
         throw createFatalAPIFormat(req, res);
       }
-      return Promise.resolve()
+
+      return this.uploadSourcemap(res, file);
     } catch (e) {
       if (isSuperAgentError(e) && e.response.status === 409) {
         this.env.log.error('Unable to sync map ${file}.')
@@ -93,6 +99,36 @@ export class MonitoringSyncSourcemapsCommand extends Command {
         throw e;
       }
     }
+  }
+
+  async uploadSourcemap(res: APIResponseSuccess, file:string) {
+    const r = <any>res;
+    console.log(r);
+
+    const fileData = await fsReadFile(file, { encoding: 'utf8' });
+    const sourcemapPost = r.data.sourcemap_post;
+    console.log('Uploading sourcemap to s3', sourcemapPost, file);
+    //return Promise.resolve()
+
+    createRequest('post', sourcemapPost.url)
+      .buffer()
+      .field(sourcemapPost.fields)
+      .field('file', fileData)
+      .on('progress', (event: any) => {
+        console.log('File upload progress', event);
+      })
+      .end((err: any, res: any) => {
+        console.log('ERROR', err, res);
+        if (err) {
+          return Promise.reject(err);
+        }
+        if (res.status !== 204) {
+          // TODO: log body for debug purposes?
+          return Promise.reject(new Error(`Unexpected status code from AWS: ${res.status}`));
+        }
+        Promise.resolve();
+      });
+    //return uploadToS3(newSourcemap.sourcemapPost, this.state.sourcemap_file)
   }
 
   async doProdBuild() {
