@@ -68,7 +68,7 @@ export class MonitoringSyncSourcemapsCommand extends Command {
     this.env.log.info(`Syncing SourceMaps for app version ${chalk.green(appVersion)} of ${chalk.green(cordovaInfo.id)}`)
     readDir(sourcemapsDir).then(files => {
       const maps = files.filter(f => f.indexOf('.js.map') >= 0)
-      Promise.all(maps.map(f => this.syncSourcemap(f, appVersion, commitHash, appId, token)))
+      Promise.all(maps.map(f => this.syncSourcemap(path.join(sourcemapsDir, f), appVersion, commitHash, appId, token)))
     })
   }
 
@@ -77,7 +77,7 @@ export class MonitoringSyncSourcemapsCommand extends Command {
     const req = this.env.client.make('POST', `/monitoring/${appId}/sourcemaps`)
       .set('Authorization', `Bearer ${token}`)
       .send({
-        name: file,
+        name: path.basename(file),
         version: appVersion,
         commit: commitHash
       });
@@ -103,11 +103,9 @@ export class MonitoringSyncSourcemapsCommand extends Command {
 
   async uploadSourcemap(res: APIResponseSuccess, file:string) {
     const r = <any>res;
-    console.log(r);
 
     const fileData = await fsReadFile(file, { encoding: 'utf8' });
     const sourcemapPost = r.data.sourcemap_post;
-    console.log('Uploading sourcemap to s3', sourcemapPost, file);
     //return Promise.resolve()
 
     createRequest('post', sourcemapPost.url)
@@ -115,17 +113,21 @@ export class MonitoringSyncSourcemapsCommand extends Command {
       .field(sourcemapPost.fields)
       .field('file', fileData)
       .on('progress', (event: any) => {
-        console.log('File upload progress', event);
       })
       .end((err: any, res: any) => {
-        console.log('ERROR', err, res);
         if (err) {
+          this.env.log.error('Unable to upload sourcemap');
+          this.env.log.error(err);
           return Promise.reject(err);
         }
         if (res.status !== 204) {
           // TODO: log body for debug purposes?
           return Promise.reject(new Error(`Unexpected status code from AWS: ${res.status}`));
         }
+
+        this.env.log.ok('Uploaded sourcemap');
+        this.env.log.info('See the Error Monitoring docs for usage information and next steps: http://ionicframework.com/docs/pro/error-monitoring.html')
+
         Promise.resolve();
       });
     //return uploadToS3(newSourcemap.sourcemapPost, this.state.sourcemap_file)
