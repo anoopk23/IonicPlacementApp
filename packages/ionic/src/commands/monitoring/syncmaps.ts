@@ -8,7 +8,7 @@ import { BACKEND_PRO, CommandLineInputs, CommandLineOptions } from '@ionic/cli-u
 import { Command, CommandMetadata } from '@ionic/cli-utils/lib/command';
 import { createFatalAPIFormat } from '@ionic/cli-utils/lib/http';
 import { createRequest } from '@ionic/cli-utils/lib/utils/http';
-import { fsReadFile, readDir, pathExists } from '@ionic/cli-utils/lib/utils/fs';
+import { fsReadFile, pathExists, readDir } from '@ionic/cli-utils/lib/utils/fs';
 import { isSuperAgentError } from '@ionic/cli-utils/guards';
 
 @CommandMetadata({
@@ -33,14 +33,14 @@ export class MonitoringSyncSourcemapsCommand extends Command {
 
     const sourcemapsDir = path.join(this.env.project.directory, '.sourcemaps');
 
-    let sourcemapsExist = await pathExists(sourcemapsDir)
+    let sourcemapsExist = await pathExists(sourcemapsDir);
 
     if (!sourcemapsExist) {
       this.env.log.info('No sourcemaps found, doing build...');
-      await this.doProdBuild()
+      await this.doProdBuild();
       sourcemapsExist = await pathExists(sourcemapsDir);
       if (!sourcemapsExist) {
-        this.env.log.error('Unable to sync sourcemaps. Make sure you have @ionic/app-scripts version 2.1.4 or greater.')
+        this.env.log.error('Unable to sync sourcemaps. Make sure you have @ionic/app-scripts version 2.1.4 or greater.');
         return;
       }
     } else {
@@ -52,14 +52,14 @@ export class MonitoringSyncSourcemapsCommand extends Command {
       doNewBuild && await this.doProdBuild();
     }
 
-    this.env.log.info(`Syncing SourceMaps for app version ${chalk.green(appVersion)} of ${chalk.green(cordovaInfo.id)}`)
+    this.env.log.info(`Syncing SourceMaps for app version ${chalk.green(appVersion)} of ${chalk.green(cordovaInfo.id)}`);
     readDir(sourcemapsDir).then(files => {
-      const maps = files.filter(f => f.indexOf('.js.map') >= 0)
-      Promise.all(maps.map(f => this.syncSourcemap(path.join(sourcemapsDir, f), appVersion, commitHash, appId, token)))
-    })
+      const maps = files.filter(f => f.indexOf('.js.map') >= 0);
+      Promise.all(maps.map(f => this.syncSourcemap(path.join(sourcemapsDir, f), appVersion, commitHash, appId, token)));
+    });
   }
 
-  async syncSourcemap(file: string, appVersion: string, commitHash: string, appId: string, token: string) : Promise<void> {
+  async syncSourcemap(file: string, appVersion: string, commitHash: string, appId: string, token: string): Promise<void> {
 
     const req = this.env.client.make('POST', `/monitoring/${appId}/sourcemaps`)
       .set('Authorization', `Bearer ${token}`)
@@ -80,15 +80,15 @@ export class MonitoringSyncSourcemapsCommand extends Command {
       return this.uploadSourcemap(res, file);
     } catch (e) {
       if (isSuperAgentError(e) && e.response.status === 409) {
-        this.env.log.error('Unable to sync map ${file}.')
-        this.env.tasks.fail()
+        this.env.log.error('Unable to sync map ${file}.');
+        this.env.tasks.fail();
       } else {
         throw e;
       }
     }
   }
 
-  async uploadSourcemap(res: APIResponseSuccess, file:string) {
+  async uploadSourcemap(res: APIResponseSuccess, file: string) {
     const r = <any>res;
 
     const fileData = await fsReadFile(file, { encoding: 'utf8' });
@@ -111,7 +111,7 @@ export class MonitoringSyncSourcemapsCommand extends Command {
         }
 
         this.env.log.ok('Uploaded sourcemap');
-        this.env.log.info('See the Error Monitoring docs for usage information and next steps: http://ionicframework.com/docs/pro/error-monitoring.html')
+        this.env.log.info('See the Error Monitoring docs for usage information and next steps: http://ionicframework.com/docs/pro/error-monitoring.html');
 
         Promise.resolve();
       });
