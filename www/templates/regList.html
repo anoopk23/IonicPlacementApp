@@ -1,0 +1,23 @@
+<ion-view >
+  <ion-nav-title>
+      <center>{{company.name}} Students</center>
+  </ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button button-icon icon ion-android-person-add small-icon"  ng-click="showRegList()"></button>
+  </ion-nav-buttons>
+  <ion-content>
+
+
+    
+    <ion-list>
+      <ion-list can-swipe="true">
+        <ion-item class="item " item="group" collection-repeat="student in reg_student_list"  href="#/company/{{company._id}}/reg-list/{{student._id}}" hold-list>
+
+          <h2>{{student.name}}</h2>
+          <h5>{{student.id}}</h5>
+        </ion-item>
+      </ion-list>
+    </ion-list>
+
+  </ion-content>
+</ion-view> 

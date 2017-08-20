@@ -1,0 +1,22 @@
+
+
+<ion-view view-title="Company List">
+  <ion-nav-buttons side="right">
+    <button class="button button-icon icon ion-android-person-add small-icon" ng-click="modal.show()" ></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ion-list>
+      <!-- <pre>{{ companies | json }}</pre> -->
+      <ion-list can-swipe="true">
+        <ion-item class="item " item="group" collection-repeat="company in companies"  href="#/company/{{company._id}}" hold-list>
+
+          <h2>{{company.name}}</h2>
+          <h5>{{company.date}}</h5>
+
+        </ion-item>
+      </ion-list>
+    </ion-list>
+
+  </ion-content>
+</ion-view> 
+

@@ -1,0 +1,35 @@
+
+<ion-modal-view>
+  <ion-header-bar align-title="center"  class="bar bar-header bar-positive">
+    <h1 class="title">New Company</h1>
+    <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+  </ion-header-bar>
+  <ion-content class="padding" >
+    <div class="list"  ng-form="userForm">
+      <label class="item item-input ">
+        <span class="input-label">Name</span>
+        <input name="name" id="name" ng-model="company.name" type="text"  required>
+      </label>
+      <!-- <pre>userForm.name.$error = {{ userForm.name.$error | json }}</pre> -->
+      <div class="field-message" ng-messages="userForm.name.$error" ng-if='userForm.name.$touched' ng-cloak>
+        <div ng-message="required">Name is required</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">Date</span>
+        <input name="date" id="date" ng-model="company.date" type="text"  required>
+      </label>
+      <!-- <pre>userForm.date.$error = {{ userForm.date.$error | json }}</pre> -->
+      <div class="field-message" ng-messages="userForm.date.$error" ng-if='userForm.date.$touched' ng-cloak>
+        <div ng-message="required">Date is required</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">Branches</span>
+        <input name="branches" id="branches" ng-model="company.branches" type="text"  required>
+      </label>
+      <div class="field-message" ng-messages="userForm.branches.$error" ng-if='userForm.branches.$touched' ng-cloak>
+        <div ng-message="required">Branches is required</div>
+      </div>
+      <button id="register" class="button button-full button-positive" ng-click="createCompany(company)" ng-disabled="userForm.$invalid">Add Company</button>
+    </div>
+  </ion-content>
+</ion-modal-view>

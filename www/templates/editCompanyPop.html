@@ -1,0 +1,39 @@
+<ion-modal-view >
+  <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+    <h1 class="title">Edit Company Details</h1>
+    <button class="button button-clear button-primary" ng-click="hideModal()">Cancel</button>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <div class="list"  ng-form="userForm">
+      <label class="item item-input ">
+        <span class="input-label">Name</span>
+        <input name="name" id="name" ng-model="company_edit.name" type="text"  required>
+      </label>
+<!--       <pre>{{ company | json }}</pre>
+      <pre>{{ company_edit | json }}</pre> -->
+      <div class="field-message" ng-messages="userForm.name.$error" ng-if='userForm.name.$touched' ng-cloak>
+        <div ng-message="required">Name is required</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">Date</span>
+        <input name="date" id="date" ng-model="company_edit.date" type="text" ng-pattern='/(((19|20)([2468][048]|[13579][26]|0[48])|2000)[/]02[/]29|((19|20)[0-9]{2}[/](0[4678]|1[02])[/](0[1-9]|[12][0-9]|30)|(19|20)[0-9]{2}[/](0[1359]|11)[/](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[/]02[/](0[1-9]|1[0-9]|2[0-8])))/' required>
+      </label>
+      <!-- <pre>userForm.date.$error = {{ userForm.date.$error | json }}</pre> -->
+      <div class="field-message" ng-messages="userForm.date.$error" ng-if='userForm.date.$touched' ng-cloak>
+        <div ng-message="required">Date is required</div>
+        <div ng-show="userForm.date.$error.pattern">Required Date Format: YYYY/MM/DD</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">Branches</span>
+        <input name="branches" id="branches" ng-model="company_edit.branches" type="text" ng-pattern='/\w+(\s*,\s*\w+)*/'  required>
+      </label>
+      <div class="field-message" ng-messages="userForm.branches.$error" ng-if='userForm.branches.$touched'  ng-cloak>
+        <div ng-message="required">Branches are required. Multiple branches should separated by comma</div>
+      </div>
+        
+
+
+      <button class="button button-full button-positive" ng-click="editCompany(company_edit)" ng-disabled="userForm.$invalid">Update Company</button>
+    </div>
+  </ion-content>
+</ion-modal-view>

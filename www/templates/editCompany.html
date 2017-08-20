@@ -1,0 +1,37 @@
+<ion-view view-title="Company details">
+    <ion-nav-buttons side="right">
+          <button class="button button-icon icon ion-edit small-icon" ng-click="showModal(company)" ></button>
+    </ion-nav-buttons>
+  <ion-content>
+    <div class="list card">
+
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Name</span>
+          {{company.name}}
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Branches</span>
+          {{(company.branches)}}
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Date</span>
+          {{company.date}}
+        </label>
+
+        <ion-item class="item item-button-right" item="group"   >
+          Registration List
+          <a class="button button-positive" href="#/company/{{company._id}}/reg-list">
+            <i class="icon ion-ios-people"></i>
+          </a>
+        </ion-item>
+
+        <!-- <button class="item item-icon-left" ng-click="modal.show()" ><i class=" clear icon ion-android-people"></i> Registered Students</button> -->
+          
+        
+      </div>
+
+
+
+  </ion-content>
+</ion-view>

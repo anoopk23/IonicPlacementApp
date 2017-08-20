@@ -1,0 +1,20 @@
+<ion-modal-view>
+  <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+    <button class="button button-clear button-primary" ng-click="addStudents()">Done</button>
+    <h1 class="title">Register Students</h1>
+    <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+  </ion-header-bar>
+  <ion-content>
+    <ion-list can-swipe="true" >
+        
+      <ion-checkbox class="item " item="group" collection-repeat="student in students"  ng-model="student.checked" item-height="70px" item-width="100%">
+          
+          <h2>{{student.value.name}}</h2>
+          <h5>{{student.value.id}}</h5>
+          <!-- <pre ng-bind="student.checked"></pre>  -->
+      </ion-checkbox>
+        
+    </ion-list>
+
+  </ion-content>
+</ion-modal-view>> 

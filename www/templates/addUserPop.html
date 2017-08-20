@@ -1,0 +1,47 @@
+<!-- <script type="text/javascript">
+
+</script>
+ -->
+
+<ion-modal-view>
+  <ion-header-bar align-title="center"  class="bar bar-header bar-positive">
+    <h1 class="title">New Student</h1>
+    <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+  </ion-header-bar>
+  <ion-content class="padding" >
+    <div class="list"  ng-form="userForm">
+      <label class="item item-input ">
+        <span class="input-label">Name</span>
+        <input name="name" id="name" ng-model="student.name" type="text"  required>
+      </label>
+      <!-- <pre>userForm.name.$error = {{ userForm.name.$error | json }}</pre> -->
+      <div class="field-message" ng-messages="userForm.name.$error" ng-if='userForm.name.$touched' ng-cloak>
+        <div ng-message="required">Name is required</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">Branch</span>
+        <input name="branch" id="branch" ng-model="student.branch" type="text"  required>
+      </label>
+      <div class="field-message" ng-messages="userForm.branch.$error" ng-if='userForm.branch.$touched' ng-cloak>
+        <div ng-message="required">Branch is required</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">Roll No.</span>
+        <input name="id" id="id" ng-model="student.id" type="text"  required>
+      </label>
+      <div class="field-message" ng-messages="userForm.id.$error" ng-if='userForm.id.$touched' ng-cloak>
+        <div ng-message="required">Roll no. is required</div>
+      </div>
+      <label class="item item-input ">
+        <span class="input-label">CGPA</span>
+        <input name="cgpa" id="cgpa" ng-model="student.cgpa" type="text"  required ng-pattern='/(^\d((\.|\,)\d+)?$)|(10)/'>
+      </label>
+      <div class="field-message" ng-messages="userForm.cgpa.$error" ng-if='userForm.cgpa.$touched' ng-cloak>
+        <div ng-message="required">CGPA is required</div>
+        <div ng-show="userForm.cgpa.$error.pattern">CGPA must be positive number <= 10(eg: 7.31)</div>
+        <!-- input valid? = <code>{{userForm.cgpa.$valid}}</code><br> -->
+      </div>
+      <button id="register" class="button button-full button-positive" ng-click="createStudent(student)" ng-disabled="userForm.$invalid">Add Student</button>
+    </div>
+  </ion-content>
+</ion-modal-view>
