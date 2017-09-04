@@ -1,0 +1,24 @@
+<<<<<<< HEAD
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
+node_modules/
+platforms/
+plugins/
+=======
+*.sw*
+*.cookies
+node_modules/
+.idea/
+.vscode/
+coverage/
+.coveralls.yml
+.changelog/
+npm-debug.log*
+lerna-debug.log
+
+docs
+dist
+
+package-lock.json*
+>>>>>>> 3a447a5e88ef85cb690251cfe521a0c51a657d19

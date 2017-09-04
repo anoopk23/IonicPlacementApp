@@ -1,0 +1,15 @@
+setup mongodb
+
+"C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe"
+
+
+"C:\Program Files\MongoDB\Server\3.4\bin\mongo.exe"
+ (to connect)
+
+ use the following url to connect api with db
+ 'mongodb://127.0.0.1:27017/test'
+
+to stop mongod:
+
+use admin
+db.shutdownServer()

@@ -1,0 +1,16 @@
+{
+  "name": "placementEventApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "license": "",
+  "dependencies": {
+    "express": "~4.0.0",
+    "mongoose": "~3.6.13",
+    "body-parser": "~1.0.1",
+    "node-restful":"~0.2.6",
+    "debug": "~2.6.6",
+    "process": "~0.11.10",
+    "events": "~1.1.1"
+  }
+}
